@@ -4,7 +4,9 @@ async function main() {
   const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   
   console.log("Checking contract deployment...");
+  console.log("Network:", hre.network.name);
   console.log("Contract Address:", contractAddress);
+  console.log("Deployment check started at:", new Date().toISOString());
   
   const [deployer] = await hre.ethers.getSigners();
   console.log("Checking with account:", deployer.address);
@@ -29,6 +31,10 @@ async function main() {
       // Check if deployer is authorized
       const isAuthorized = await contract.isAuthorized(deployer.address);
       console.log(`Is ${deployer.address} authorized?`, isAuthorized);
+      
+      // Get contract balance
+      const balance = await hre.ethers.provider.getBalance(contractAddress);
+      console.log("Contract Balance:", hre.ethers.formatEther(balance), "ETH");
     } catch (error) {
       console.error("Error calling contract:", error);
     }

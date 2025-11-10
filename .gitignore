@@ -3,7 +3,6 @@ node_modules/
 ui/node_modules/
 
 # Build outputs
-artifacts/
 cache/
 coverage/
 dist/
