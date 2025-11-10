@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+ui/node_modules/
+
+# Build outputs
+artifacts/
+cache/
+coverage/
+dist/
+ui/dist/
+
+# Environment variables
+.env
+.env.local
+ui/.env
+ui/.env.local
+
+# Hardhat
+fhevmTemp/
+deployments/
+
+# TypeScript
+types/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
