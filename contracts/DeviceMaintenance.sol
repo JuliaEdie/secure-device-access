@@ -89,6 +89,7 @@ contract DeviceMaintenance {
         bytes memory encryptedNotes,
         bytes memory encryptedCalibration
     ) external onlyAuthorized {
+        require(!devices[deviceId].exists, "Device already exists");
         require(encryptedNotes.length > 0, "Encrypted notes cannot be empty");
         require(encryptedCalibration.length > 0, "Encrypted calibration cannot be empty");
 
