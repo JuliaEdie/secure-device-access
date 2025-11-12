@@ -58,7 +58,7 @@ contract DeviceMaintenance {
     /// @notice Modifier to restrict access to authorized technicians only
     modifier onlyAuthorized() {
         require(
-            !authorizedTechnicians[msg.sender] && msg.sender != owner,
+            authorizedTechnicians[msg.sender] || msg.sender == owner,
             "Not authorized technician"
         );
         _;

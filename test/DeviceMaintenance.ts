@@ -109,6 +109,38 @@ describe("DeviceMaintenance", function () {
     ).to.be.revertedWith("Not authorized technician");
   });
 
+  it("should prevent duplicate device registration", async function () {
+    const deviceId = "dev-003";
+    const encryptedNotes = ethers.toUtf8Bytes("encrypted-notes");
+    const encryptedCalibration = ethers.toUtf8Bytes("encrypted-calibration");
+
+    await (
+      await deviceMaintenance.registerDevice(
+        deviceId,
+        "Test Device",
+        "Test Type",
+        0,
+        Math.floor(Date.now() / 1000),
+        Math.floor(Date.now() / 1000) + 86400,
+        encryptedNotes,
+        encryptedCalibration
+      )
+    ).wait();
+
+    await expect(
+      deviceMaintenance.registerDevice(
+        deviceId,
+        "Duplicate Device",
+        "Test Type",
+        0,
+        Math.floor(Date.now() / 1000),
+        Math.floor(Date.now() / 1000) + 86400,
+        encryptedNotes,
+        encryptedCalibration
+      )
+    ).to.be.revertedWith("Device already exists");
+  });
+
   it("should update device maintenance", async function () {
     // First register a device
     const deviceId = "dev-003";
