@@ -58,6 +58,9 @@ const config: HardhatUserConfig = {
       },
       chainId: 11155111,
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
+      timeout: 120000,
+      gas: "auto",
+      gasPrice: "auto",
     },
   },
   paths: {
