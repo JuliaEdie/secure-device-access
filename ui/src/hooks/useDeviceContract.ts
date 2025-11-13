@@ -190,8 +190,10 @@ export const useDeviceContract = () => {
       const records = await contract.getEncryptedRecords(deviceId);
       
       // Convert bytes back to string
-      const notesStr = ethers.toUtf8String(records[0]);
-      const calibrationStr = ethers.toUtf8String(records[1]);
+      const notesBytesArray = new Uint8Array(records[0]);
+      const calibrationBytesArray = new Uint8Array(records[1]);
+      const notesStr = bytesToEncryptedString(notesBytesArray);
+      const calibrationStr = bytesToEncryptedString(calibrationBytesArray);
 
       return {
         encryptedNotes: notesStr,
