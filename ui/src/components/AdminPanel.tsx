@@ -89,6 +89,8 @@ export const AdminPanel = ({ onDeviceRegistered }: AdminPanelProps) => {
       toast.error('Please enter a valid Ethereum address');
       return;
     }
+
+    setIsAuthorizing(true);
     try {
       if (!publicClient) {
         throw new Error('Public client not available');
