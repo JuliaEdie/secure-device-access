@@ -91,8 +91,8 @@ export const useDeviceContract = () => {
     const encryptedCalibration = await encryptString(calibration, address, chainId);
 
     // Convert to bytes for contract
-    const notesBytes = ethers.toUtf8Bytes(encryptedNotes);
-    const calibrationBytes = ethers.toUtf8Bytes(encryptedCalibration);
+    const notesBytes = encryptedStringToBytes(encryptedNotes);
+    const calibrationBytes = encryptedStringToBytes(encryptedCalibration);
 
     const contract = await getContract();
     const lastMaintenance = Math.floor(Date.now() / 1000);
@@ -128,8 +128,8 @@ export const useDeviceContract = () => {
     const encryptedCalibration = await encryptString(calibration, address, chainId);
 
     // Convert to bytes for contract
-    const notesBytes = ethers.toUtf8Bytes(encryptedNotes);
-    const calibrationBytes = ethers.toUtf8Bytes(encryptedCalibration);
+    const notesBytes = encryptedStringToBytes(encryptedNotes);
+    const calibrationBytes = encryptedStringToBytes(encryptedCalibration);
 
     const contract = await getContract();
     const lastMaintenance = Math.floor(Date.now() / 1000);
