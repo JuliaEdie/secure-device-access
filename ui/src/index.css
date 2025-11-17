@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 768px) {
+  .device-card {
+    padding: 1rem;
+  }
+  
+  .admin-panel {
+    padding: 1rem;
+  }
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
