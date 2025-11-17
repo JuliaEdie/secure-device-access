@@ -31,6 +31,11 @@ const Index = () => {
       // Combine event-based IDs with manually added IDs
       const allDeviceIds = Array.from(new Set([...eventDeviceIds, ...manualDeviceIds]));
       
+      // Cache device IDs for faster subsequent loads
+      if (eventDeviceIds.length > 0) {
+        setManualDeviceIds(eventDeviceIds);
+      }
+      
       if (allDeviceIds.length === 0) {
         setDevices([]);
         setIsLoading(false);
