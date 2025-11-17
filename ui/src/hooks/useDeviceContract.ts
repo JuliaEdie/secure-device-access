@@ -170,6 +170,24 @@ export const useDeviceContract = () => {
       // Don't log error if it's just missing contract address
       if (error instanceof Error && error.message.includes('Contract address not configured')) {
         console.warn('Contract address not configured. Please deploy the contract and set VITE_CONTRACT_ADDRESS.');
+      } else if (error instanceof Error && error.message.includes('network')) {
+        console.warn('Network error occurred. Retrying...');
+        // Retry once after a short delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+          const contract = await getPublicContract();
+          const info = await contract.getDeviceInfo(deviceId);
+          return {
+            deviceId,
+            name: info[0],
+            deviceType: info[1],
+            status: Number(info[2]),
+            lastMaintenance: BigInt(info[3]),
+            nextCalibration: BigInt(info[4]),
+          };
+        } catch (retryError) {
+          console.error('Retry failed:', retryError);
+        }
       } else {
         console.error('Error getting device info:', error);
       }
