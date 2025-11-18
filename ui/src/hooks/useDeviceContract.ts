@@ -287,6 +287,10 @@ export const useDeviceContract = () => {
         : 0n;
 
       console.log(`Querying DeviceRegistered events from block ${fromBlock} to ${currentBlock} (${currentBlock - fromBlock} blocks)`);
+      
+      // Add error handling for event query failures
+      let queryAttempts = 0;
+      const MAX_ATTEMPTS = 3;
 
       // Try using viem's getLogs first (more reliable for local networks)
       try {
