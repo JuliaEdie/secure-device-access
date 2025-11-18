@@ -22,7 +22,7 @@ interface AdminPanelProps {
 export const AdminPanel = ({ onDeviceRegistered }: AdminPanelProps) => {
   const { address, isConnected } = useAccount();
   const publicClient = usePublicClient();
-  const { checkAuthorization, registerDevice, checkContractDeployed } = useDeviceContract();
+  const { checkAuthorization, registerDevice, updateMaintenance, checkContractDeployed } = useDeviceContract();
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isChecking, setIsChecking] = useState(false);
@@ -107,6 +107,8 @@ export const AdminPanel = ({ onDeviceRegistered }: AdminPanelProps) => {
     } catch (error: any) {
       console.error('Error authorizing technician:', error);
       toast.error(`Failed to authorize: ${error.message || 'Unknown error'}`);
+    } finally {
+      setIsAuthorizing(false);
     }
   };
 
@@ -282,6 +284,114 @@ export const AdminPanel = ({ onDeviceRegistered }: AdminPanelProps) => {
                 <>
                   <UserPlus className="w-4 h-4 mr-2" />
                   Authorize Technician
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Update Device Maintenance */}
+      {isAuthorized && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              Update Device Maintenance
+            </CardTitle>
+            <CardDescription>Update maintenance records for existing devices</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="update-device-id">Device ID *</Label>
+              <Input
+                id="update-device-id"
+                placeholder="dev-001"
+                value={deviceForm.deviceId}
+                onChange={(e) => setDeviceForm({ ...deviceForm, deviceId: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="update-status">Status *</Label>
+              <Select
+                value={deviceForm.status}
+                onValueChange={(value) => setDeviceForm({ ...deviceForm, status: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">Operational</SelectItem>
+                  <SelectItem value="1">Maintenance</SelectItem>
+                  <SelectItem value="2">Critical</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="update-notes">Repair Notes *</Label>
+              <Textarea
+                id="update-notes"
+                placeholder="Updated repair notes..."
+                value={deviceForm.notes}
+                onChange={(e) => setDeviceForm({ ...deviceForm, notes: e.target.value })}
+                rows={3}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="update-calibration">Calibration Values *</Label>
+              <Textarea
+                id="update-calibration"
+                placeholder="Updated calibration values..."
+                value={deviceForm.calibration}
+                onChange={(e) => setDeviceForm({ ...deviceForm, calibration: e.target.value })}
+                rows={3}
+              />
+            </div>
+            <Button
+              onClick={async () => {
+                if (!deviceForm.deviceId || !deviceForm.notes || !deviceForm.calibration) {
+                  toast.error('Please fill in all fields');
+                  return;
+                }
+                setIsRegistering(true);
+                try {
+                  await updateMaintenance(
+                    deviceForm.deviceId,
+                    parseInt(deviceForm.status),
+                    deviceForm.notes,
+                    deviceForm.calibration
+                  );
+                  toast.success(`Device ${deviceForm.deviceId} maintenance updated successfully`);
+                  setDeviceForm({
+                    deviceId: '',
+                    name: '',
+                    deviceType: '',
+                    status: '0',
+                    notes: '',
+                    calibration: '',
+                  });
+                  if (onDeviceRegistered) {
+                    onDeviceRegistered();
+                  }
+                } catch (error: any) {
+                  console.error('Error updating maintenance:', error);
+                  toast.error(`Failed to update maintenance: ${error.message || 'Unknown error'}`);
+                } finally {
+                  setIsRegistering(false);
+                }
+              }}
+              disabled={isRegistering}
+              className="w-full"
+            >
+              {isRegistering ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Update Maintenance
                 </>
               )}
             </Button>
