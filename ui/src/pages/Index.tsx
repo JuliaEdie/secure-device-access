@@ -7,6 +7,8 @@ import { Shield, RefreshCw, AlertCircle, Settings } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { useDeviceContract, DeviceRecord } from '@/hooks/useDeviceContract';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { CONTRACT_ADDRESS } from '@/config/contracts';
