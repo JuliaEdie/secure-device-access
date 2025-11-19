@@ -237,6 +237,60 @@ describe("DeviceMaintenance", function () {
       deviceMaintenance.connect(signers.unauthorized).getEncryptedRecords(deviceId)
     ).to.be.revertedWith("Not authorized technician");
   });
+
+  it("should emit DeviceRegistered event on registration", async function () {
+    const deviceId = "dev-006";
+    const encryptedNotes = ethers.toUtf8Bytes("encrypted-notes");
+    const encryptedCalibration = ethers.toUtf8Bytes("encrypted-calibration");
+
+    await expect(
+      deviceMaintenance.registerDevice(
+        deviceId,
+        "Test Device",
+        "Test Type",
+        0,
+        Math.floor(Date.now() / 1000),
+        Math.floor(Date.now() / 1000) + 86400,
+        encryptedNotes,
+        encryptedCalibration
+      )
+    ).to.emit(deviceMaintenance, "DeviceRegistered")
+      .withArgs(deviceId, "Test Device", signers.deployer.address);
+  });
+
+  it("should emit MaintenanceUpdated event on update", async function () {
+    const deviceId = "dev-007";
+    const encryptedNotes = ethers.toUtf8Bytes("initial-notes");
+    const encryptedCalibration = ethers.toUtf8Bytes("initial-calibration");
+
+    await (
+      await deviceMaintenance.registerDevice(
+        deviceId,
+        "Test Device",
+        "Test Type",
+        0,
+        Math.floor(Date.now() / 1000),
+        Math.floor(Date.now() / 1000) + 86400,
+        encryptedNotes,
+        encryptedCalibration
+      )
+    ).wait();
+
+    const newEncryptedNotes = ethers.toUtf8Bytes("updated-notes");
+    const newEncryptedCalibration = ethers.toUtf8Bytes("updated-calibration");
+
+    await expect(
+      deviceMaintenance.updateMaintenance(
+        deviceId,
+        1,
+        Math.floor(Date.now() / 1000),
+        Math.floor(Date.now() / 1000) + 86400,
+        newEncryptedNotes,
+        newEncryptedCalibration
+      )
+    ).to.emit(deviceMaintenance, "MaintenanceUpdated")
+      .withArgs(deviceId, signers.deployer.address, (value: any) => typeof value === 'bigint');
+  });
 });
 
 
